@@ -114,5 +114,37 @@ app.get('/send/:device/:key', function(req, res) {
 
 }); // end define GET request for /send/deviceName/buttonName
 
+// define GET request for /send/deviceName/buttonName
+app.get('/hold/:device/:key/:delay', function(req, res) {
+
+  var deviceName = req.param("device");
+  var key = req.param("key").toUpperCase();
+  var delay = req.param("delay");
+
+  // Make sure that the user has requested a valid device 
+  if(!devices.hasOwnProperty(deviceName)) {
+    res.send("invalid device");
+    return;
+  }
+
+  var resultFn = function(error, stdout, stderr) {
+    if (error) { res.send("Error sending command"); }
+    else { res.send("Successfully sent command"); }
+  };
+
+  // send start command to irsend
+  var command = "irsend SEND_START "+deviceName+" "+key;
+  exec(command, resultFn);
+
+  // send stop command to irsend after delay
+  var stopFn = function() {
+    var command = "irsend SEND_STOP " + deviceName + " " + key;
+    exec(command); //, resultFn);
+  };
+  setTimeout(stopFn, delay);
+
+}); // end define GET request for /send/deviceName/buttonName
+
+
 // Listen on port 80
 app.listen('80');

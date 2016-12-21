@@ -287,6 +287,17 @@ li.nav-back-arrow {
     background: transparent;
 }
 
+.btn-black {
+    background-color: #ffffff;
+    border-color: #000000;
+    color: #000000;
+}
+
+.btn-black:hover, .btn-black:focus, .btn-black:active, .btn-black.active, .open .dropdown-toggle.btn-black {
+    background-color: #000000;
+    border-color: #ffffff;
+    color: #ffffff;
+}
 
 a.navbar-brand {
             color:#595959 !important;

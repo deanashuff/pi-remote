@@ -1,5 +1,3 @@
-
-
 var changeTab = function(event) {
   event.preventDefault()
   var link = this;
@@ -17,24 +15,26 @@ var changeTab = function(event) {
 
 $("#tabBar a").bind("click touchstart",changeTab)
 
-
+// Handler for all anchors/buttons
 $(".remote-screen a").click(function(event) {
   var $this = $(this);
   $this.addClass("active");
 
-//  document.body.style.opacity = "0.5";
-
-$.ajax({
-  url: $(this).attr("href"),
-}).done(function(data) {
+  $.ajax({
+    url: $(this).attr("href"),
+    timeout: 3000,
+    error: function(xhr, status, thrown) {
+        alert(status);
+    }
+  }).done(function(data) {
 	console.log(data);
 	console.log($this);
 	$this.removeClass("active");
-//  document.body.style.opacity="1"
+  });
+  event.preventDefault()
+  return false;
 });
-event.preventDefault()
-return true;
-});
+
 /**
  * Converts :hover CSS to :active CSS on mobile devices.
  * Otherwise, when tapping a button on a mobile device, the button stays in
@@ -66,17 +66,20 @@ function hoverTouchUnstick() {
     }
   }
 }
-  hoverTouchUnstick();
-var sendKey = function(remote_name, key_name) {
-    document.body.style.opacity = "0.5";
+hoverTouchUnstick();
 
-$.ajax({
-  url: "/send/"+remote_name+"/"+key_name,
-}).done(function(data) {
-  console.log(data);
-  document.body.style.opacity="1"
-});  
+var sendKey = function(remote_name, key_name) {
+  document.body.style.opacity = "0.5";
+
+  $.ajax({
+    url: "/send/"+remote_name+"/"+key_name,
+  }).done(function(data) {
+    console.log(data);
+    document.body.style.opacity="1"
+  });  
 }
+
+/*
 $("#type").bind('change input',function(event) {
   var $this = $(this);
   var text = this.value;
@@ -127,7 +130,7 @@ $("#type").bind('keyup', function(event) {
   }
   sendKey("vizio", keyName);
 })
-
+*/
 setTimeout(function () {
   window.scrollTo(0, 1);
 }, 1000);

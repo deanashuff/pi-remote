@@ -1,1 +1,4 @@
 node_modules
+err.log
+forever.log
+**/.AppleDouble
