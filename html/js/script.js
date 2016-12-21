@@ -7,11 +7,9 @@ var changeTab = function(event) {
   var name = $link.text().trim();
   var remote = name.toLowerCase();
 
-
-
   $("#tabBar li").removeClass("active");
   $link.parents("li").addClass("active");
-  $(".remote-screen").addClass("hidden");
+  $(".remote-screen:not(.always)").addClass("hidden");
   $("#"+remote).removeClass("hidden");
   document.title = "Remote - "+name;
   window.scroll(0);
@@ -21,15 +19,18 @@ $("#tabBar a").bind("click touchstart",changeTab)
 
 
 $(".remote-screen a").click(function(event) {
-var $this = $(this);
-  document.body.style.opacity = "0.5";
+  var $this = $(this);
+  $this.addClass("active");
+
+//  document.body.style.opacity = "0.5";
 
 $.ajax({
   url: $(this).attr("href"),
 }).done(function(data) {
 	console.log(data);
 	console.log($this);
-  document.body.style.opacity="1"
+	$this.removeClass("active");
+//  document.body.style.opacity="1"
 });
 event.preventDefault()
 return true;
@@ -126,3 +127,7 @@ $("#type").bind('keyup', function(event) {
   }
   sendKey("vizio", keyName);
 })
+
+setTimeout(function () {
+  window.scrollTo(0, 1);
+}, 1000);

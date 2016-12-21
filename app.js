@@ -97,10 +97,10 @@ app.get('/send/:device/:key', function(req, res) {
       break;
     }
   }
-  if(!deviceKeyFound) {
-    res.send("invalid key number: "+key);
-    return;
-  }
+//  if(!deviceKeyFound) {
+//    res.send("invalid key number: "+key);
+//    return;
+//  }
 
   // send command to irsend
   var command = "irsend SEND_ONCE "+deviceName+" "+key;
