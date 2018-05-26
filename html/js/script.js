@@ -166,4 +166,4 @@ setTimeout(function () {
   setTab(localStorage.getItem('tab'));
   window.scrollTo(0, 1);
   $(".remote-screen a").click(submitButton);
-}, 500);
+}, 1);
