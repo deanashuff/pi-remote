@@ -1,25 +1,28 @@
+// Set the current tab via CSS
+var setTab = function(tab) {
+  if (!tab) { return; }
+  var ltab = tab.toLowerCase();
+  var btn = $("#tabBar li a[href='#" + ltab + "']");
+  $("#tabBar li").removeClass("active");
+  btn.parents("li").addClass("active");
+  $(".remote-screen:not(.always)").addClass("hidden");
+  $("#"+ltab).removeClass("hidden");
+  document.title = "Remote - "+tab;
+  localStorage.setItem('tab', tab);
+};
+
 var changeTab = function(event) {
   event.preventDefault()
-  var link = this;
-  var $link = $(link);
-  var name = $link.text().trim();
-  var remote = name.toLowerCase();
-
-  $("#tabBar li").removeClass("active");
-  $link.parents("li").addClass("active");
-  $(".remote-screen:not(.always)").addClass("hidden");
-  $("#"+remote).removeClass("hidden");
-  document.title = "Remote - "+name;
-  window.scroll(0);
+  var tab = $(this).text().trim();
+  setTab(tab);
 };
 
 $("#tabBar a").bind("click touchstart",changeTab)
 
 // Handler for all anchors/buttons
-$(".remote-screen a").click(function(event) {
+var submitButton = function(event) {
   var $this = $(this);
   $this.addClass("active");
-
   $.ajax({
     url: $(this).attr("href"),
     timeout: 3000,
@@ -33,6 +36,34 @@ $(".remote-screen a").click(function(event) {
   });
   event.preventDefault()
   return false;
+};
+
+var pr = {};
+pr.timer = null;
+pr.reset = function () {
+  if (pr.timer) {
+    clearInterval(pr.timer);
+    pr.timer = null;
+  }
+}
+$("#timer_button").click(function() {
+  pr.reset();
+  function pad(num, size) {
+    var s = "000000000" + num;
+    return s.substr(s.length-size);
+  }
+  var start = + new Date();
+  pr.timer = setInterval(function() {
+    var now = + new Date();
+    var diff = Math.round((now - start)/1000);
+    if (diff > 300) {
+      diff = 0;
+      pr.reset();
+    }
+    var mins = Math.floor(diff/60);
+    var secs = diff % 60;
+    $("#timer").text(pad(mins,2)+':'+pad(secs,2));
+  }, 1000);
 });
 
 /**
@@ -68,6 +99,7 @@ function hoverTouchUnstick() {
 }
 hoverTouchUnstick();
 
+/*
 var sendKey = function(remote_name, key_name) {
   document.body.style.opacity = "0.5";
 
@@ -79,7 +111,6 @@ var sendKey = function(remote_name, key_name) {
   });  
 }
 
-/*
 $("#type").bind('change input',function(event) {
   var $this = $(this);
   var text = this.value;
@@ -132,5 +163,7 @@ $("#type").bind('keyup', function(event) {
 })
 */
 setTimeout(function () {
+  setTab(localStorage.getItem('tab'));
   window.scrollTo(0, 1);
-}, 1000);
+  $(".remote-screen a").click(submitButton);
+}, 500);
