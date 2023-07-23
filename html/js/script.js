@@ -83,7 +83,9 @@ function hoverTouchUnstick() {
     for(var sheetIndex = document.styleSheets.length - 1; sheetIndex >= 0; sheetIndex--) {
       var sheet = document.styleSheets[sheetIndex];
       // Verify if cssRules exists in sheet
-      if(sheet.cssRules) {
+      try { rules = sheet.cssRules; }
+      catch { rules = false; }
+      if(rules) {
         // Loop through each rule in sheet
         for(var ruleIndex = sheet.cssRules.length - 1; ruleIndex >= 0; ruleIndex--) {
           var rule = sheet.cssRules[ruleIndex];
